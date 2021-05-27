@@ -65,14 +65,7 @@ public class TestCase {
 	@Test
 	public void testCaseMethod() {
 		driver.get(url);
-		 driver.manage().window().maximize();
-		/*
-		 * WebDriverWait wait = new WebDriverWait(driver, 60);
-		 * wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(
-		 * "at-cv-lightbox-close"))).click();
-		 * driver.findElement(By.id("sum1")).sendKeys(first_field);
-		 * driver.findElement(By.id("sum2")).sendKeys(second_field);
-		 */
+		driver.manage().window().maximize();
 		System.out.println(first_field +"----"+second_field);
 		System.out.println("test");
 	}
