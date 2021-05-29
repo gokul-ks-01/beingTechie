@@ -1,5 +1,6 @@
 package myproject.test;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
@@ -10,6 +11,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.IMethodInstance;
 import org.testng.ITest;
+import org.testng.Reporter;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterSuite;
@@ -20,17 +22,22 @@ import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
+
+import com.itextpdf.text.DocumentException;
+
 import io.github.bonigarcia.wdm.WebDriverManager;
 import myproject.data.ReadPropertiesFile;
 import myproject.setorder.TestCaseMethodInterceptor;
+import myproject.util.TestReport;
 @Listeners(
 	    {
-	    	TestCaseMethodInterceptor.class
+	    	TestCaseMethodInterceptor.class,
+	    	TestReport.class
 	        
 	    }
 	)
 
-public class TestCase {
+public class TestCase   implements ITest {
 	WebDriver driver ;
 	static String url ;
 	private String first_field ;
@@ -39,8 +46,9 @@ public class TestCase {
 	private int order ;
 	
 	@BeforeSuite
-	public void beforeSuiteMethod() throws IOException  {
+	public void beforeSuiteMethod() throws IOException, DocumentException  {
 		url = ReadPropertiesFile.getPropertyValue("URL");
+		
 		System.out.println("BeforeSuite");
 		
 	}
@@ -53,26 +61,29 @@ public class TestCase {
 		System.out.println("BeforeClass");
 	}
 	@BeforeMethod
-	public void beforeMethod() {
+	public void beforeMethod() throws DocumentException {
 		
-		 WebDriverManager.chromedriver().setup(); 
-		 driver =new ChromeDriver();
-		 driver.manage().timeouts().implicitlyWait(1,TimeUnit.SECONDS) ;
-		
+		  WebDriverManager.chromedriver().setup(); 
+		  driver =new ChromeDriver();
+		  TestReport.onCustomAction("started chrome session");
+		  driver.manage().timeouts().implicitlyWait(1,TimeUnit.SECONDS) ;
 		 System.out.println("beforeMethod");
 	}
 	
 	@Test
-	public void testCaseMethod() {
-		driver.get(url);
+	public void testCaseMethod() throws DocumentException {
+		driver.get(url); 
+		TestReport.onCustomAction("Opened url >>" +url);
 		driver.manage().window().maximize();
+		TestReport.onCustomAction("inputs for the test : "+(first_field +"----"+second_field));
 		System.out.println(first_field +"----"+second_field);
 		System.out.println("test");
+		 driver.quit(); 
+		 TestReport.onCustomAction("Chrome session ended");
 	}
 	
 	@AfterMethod
-	public void afterMethod() {
-		driver.quit();
+	public void afterMethod() throws DocumentException {
 		System.out.println("afterMethod");
 		
 		
@@ -86,7 +97,7 @@ public class TestCase {
 		System.out.println("afterTest");
 	}
 	@AfterSuite
-	public void afterSuiteMethod() {
+	public void afterSuiteMethod() throws FileNotFoundException, DocumentException {
 		System.out.println("afterSuite");
 	}
 	
@@ -106,10 +117,11 @@ public class TestCase {
 		this.first_field = first_field;
 	}
 
-	
+
 	public String getTestName() { 
 		  return testName;
 	}
+	
 	
 	public void setTestName(String testName) {
 		this.testName = testName; 

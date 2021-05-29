@@ -20,8 +20,9 @@ public class TestCaseFactory {
 		
 		for(String[] line : fromFile) {
 			TestCase data = new TestCase();
-			data.setFirst_field(line[0]);
-			data.setSecond_field(line[1]);
+			data.setFirst_field(line[1]);
+			data.setSecond_field(line[2]);
+			data.setTestName(line[0]);
 			data.setOrder(fromFile.indexOf(line));
 			objectsList.add(data) ;
 		}
