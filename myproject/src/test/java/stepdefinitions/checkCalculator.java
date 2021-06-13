@@ -3,6 +3,7 @@ package stepdefinitions;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+import Utils.BrowserSetup;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -12,11 +13,14 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 public class checkCalculator {
 	
 	WebDriver driver ;
+	String browserType = "chrome";
+	boolean parallelTest =false ;
 	
 	@Given("user have opened the url")
 	public void open_url() {
-		WebDriverManager.chromedriver().setup();
-		driver =new ChromeDriver() ;
+		
+			driver =BrowserSetup.getWebDriver(browserType);
+			
 		driver.get("https://www.seleniumeasy.com/test/basic-first-form-demo.html");
 		driver.manage().window().maximize();
 	}
